@@ -3,8 +3,10 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import UserRoutes from "./routes/User.js";
+import path from "path";
 
 dotenv.config();
+const __dirname = path.resolve();
 
 const app = express();
 app.use(cors());
@@ -23,21 +25,31 @@ app.use((err, req, res, next) => {
   });
 });
 
+
 app.get("/", async (req, res) => {
   res.status(200).json({
-    message: "Hello developers from GFG",
+    message: "Hello developers from FitTracker API",
   });
 });
+app.use(express.static(path.join(__dirname, "client/public")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client","public", "index.html"));
+});
 
-const connectDB = () => {
-  mongoose.set("strictQuery", true);
-  mongoose
-    .connect(process.env.MONGODB_URL)
-    .then(() => console.log("Connected to Mongo DB"))
-    .catch((err) => {
-      console.error("failed to connect with mongo");
-      console.error(err);
-    });
+
+
+// const MONGODB_URI = "mongodb+srv://rahul:test123@cluster0.mongodb.net/gfgDB";
+
+export const connectDB = async () => {
+  try {
+    mongoose.set("strictQuery", true);
+    await mongoose.connect(process.env.MONGODB_URI, );
+    console.log("✓ MongoDB connected");
+  } catch (err) {
+    console.error("✗ MongoDB connection failed");
+    console.error(err);
+    process.exit(1);
+  }
 };
 
 const startServer = async () => {

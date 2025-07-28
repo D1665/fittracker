@@ -44,6 +44,8 @@ const Right = styled.div`
   gap: 16px;
   align-items: center;
   justify-content: center;
+ 
+  
 `;
 
 const Text = styled.div`
